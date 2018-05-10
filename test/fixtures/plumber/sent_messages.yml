@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  record: one
+  record_type: Record
+  campaign_message: one
+
+two:
+  record: two
+  record_type: Record
+  campaign_message: two

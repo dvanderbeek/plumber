@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  campaign: one
+  record: one
+  record_type: Record
+  exited: false
+
+two:
+  campaign: two
+  record: two
+  record_type: Record
+  exited: false
