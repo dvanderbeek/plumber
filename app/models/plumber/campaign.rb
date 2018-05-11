@@ -21,7 +21,7 @@ module Plumber
       model.ransack(filter).result
     end
 
-    def self.send_messages(date = Date.current)
+    def self.send!(date = Date.current)
       all.find_each do |campaign|
         campaign.send_messages(date)
       end
