@@ -12,7 +12,7 @@ module Plumber
       when "Adverse Action"
         { status_eq: "declined" }
       when "Lending Tree Welcome"
-        { status_eq: "open", lead_source_eq: "lending_tree" }
+        { status_eq: "open", lead_source_eq: "lending_tree", customer_sign_in_count_eq: 0 }
       end
     end
     # END TODO ###################################
@@ -29,7 +29,7 @@ module Plumber
 
     def send_messages(date = Date.current)
       messages.where(active: true).each do |message|
-        records.where("date(#{delay_column}) = ?", date - message.delay.days).each do |record|
+        records.where("date(#{record_table}.#{delay_column}) = ?", (date - message.delay.days).to_date).each do |record|
           SentMessage.find_or_create_by(record: record, message: message)
         end
       end
