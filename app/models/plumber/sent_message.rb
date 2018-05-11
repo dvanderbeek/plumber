@@ -9,7 +9,10 @@ module Plumber
     private
 
       def deliver_message
-        NotificationMailer.send_message(to: record.email, message: message).deliver_later
+        NotificationMailer.send_message(
+          record: record,
+          message: message
+        ).deliver_later
       end
   end
 end
