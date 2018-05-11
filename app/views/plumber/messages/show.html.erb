@@ -1,11 +1,7 @@
 <p id="notice"><%= notice %></p>
 
-<h1><%= link_to @message.campaign.title, @message.campaign %></h1>
-
-<p>
-  <strong>Subject:</strong>
-  <%= @message.subject %>
-</p>
+<p><%= link_to @message.campaign.title, @message.campaign %></p>
+<h1><%= @message.subject %></h1>
 
 <p>
   <strong>Delay:</strong>
