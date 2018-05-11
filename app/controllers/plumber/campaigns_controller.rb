@@ -16,6 +16,7 @@ module Plumber
     # GET /campaigns/new
     def new
       @campaign = Campaign.new
+      @message = @campaign.messages.new
     end
 
     # GET /campaigns/1/edit
@@ -51,12 +52,12 @@ module Plumber
     private
       # Use callbacks to share common setup or constraints between actions.
       def set_campaign
-        @campaign = Campaign.includes(campaign_messages: :message).find(params[:id])
+        @campaign = Campaign.includes(:messages).find(params[:id])
       end
 
       # Only allow a trusted parameter "white list" through.
       def campaign_params
-        params.require(:campaign).permit(:title, :record_class)
+        params.require(:campaign).permit(:title, :record_class, :delay_column)
       end
   end
 end

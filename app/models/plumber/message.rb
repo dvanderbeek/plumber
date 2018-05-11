@@ -1,6 +1,6 @@
 module Plumber
   class Message < ApplicationRecord
-    has_many :campaign_messages
-    has_many :campaigns, through: :campaign_messages
+    belongs_to :campaign
+    has_many :sent_messages
   end
 end

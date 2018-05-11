@@ -1,25 +1,36 @@
 module Plumber
   class Campaign < ApplicationRecord
     has_many :entrances
-    has_many :campaign_messages
-    has_many :messages, through: :campaign_messages
+    has_many :messages
 
-    # TODO: Use Ransack ##########################
+    validate :record_class_is_active_record
+    validate :delay_column_is_date_or_time
+
+    # TODO: Save in db ##########################
     def filter
-      { status: "declined" }
-    end
-
-    def records
-      record_class.safe_constantize.where(filter)
+      case title
+      when "Adverse Action"
+        { status_eq: "declined" }
+      when "Lending Tree Welcome"
+        { status_eq: "open", lead_source_eq: "lending_tree" }
+      end
     end
     # END TODO ###################################
 
+    def records
+      model.ransack(filter).result
+    end
+
+    def self.send_messages(date = Date.current)
+      all.find_each do |campaign|
+        campaign.send_messages(date)
+      end
+    end
+
     def send_messages(date = Date.current)
-      record_entrances
-      record_exits
-      campaign_messages.each do |cm|
-        entrances.reload.where(exited: false).where("created_at::date = ?", date - cm.delay.days).each do |entrance|
-          SentMessage.find_or_create_by(entrance: entrance, campaign_message: cm)
+      messages.where(active: true).each do |message|
+        records.where("date(#{delay_column}) = ?", date - message.delay.days).each do |record|
+          SentMessage.find_or_create_by(record: record, message: message)
         end
       end
     end
@@ -27,25 +38,24 @@ module Plumber
     private
 
       def record_table
-        record_class.safe_constantize.table_name
+        model.table_name
       end
 
-      def record_entrances
-        # Records who match the campaign's filters and do not have an active Entrance in the campaign
-        records.where.not(id: entrances.where(exited: false).pluck(:record_id)).each do |record|
-          entrances.create(record: record)
+      def record_class_is_active_record
+        unless model && model.ancestors.include?(ActiveRecord::Base)
+          errors.add(:record_class, "must be an ActiveRecord model")
         end
       end
 
-      def record_exits
-        # Entrances where the record no longer matches the campaign's filters
-        exits_to_record.update_all(exited: true) if exits_to_record.any?
+      def delay_column_is_date_or_time
+        column = model && model.columns.find{ |c| c.name == delay_column }
+        if column.nil? || column.type != :datetime
+          errors.add(:delay_column, "must be a timestamp")
+        end
       end
 
-      def exits_to_record
-        entrances.joins("JOIN #{record_table} ON #{record_table}.id = plumber_entrances.record_id")
-                 .where(exited: false)
-                 .where.not(record_table => filter)
+      def model
+        @model ||= record_class.safe_constantize
       end
   end
 end

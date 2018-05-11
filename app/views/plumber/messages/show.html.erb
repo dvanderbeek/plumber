@@ -1,0 +1,27 @@
+<p id="notice"><%= notice %></p>
+
+<h1><%= link_to @message.campaign.title, @message.campaign %></h1>
+
+<p>
+  <strong>Subject:</strong>
+  <%= @message.subject %>
+</p>
+
+<p>
+  <strong>Delay:</strong>
+  <%= @message.delay %>
+</p>
+
+<p>
+  <strong>Body:</strong>
+  <%= @message.body %>
+</p>
+<%= link_to "Edit message", [plumber, :edit, @message] %>
+
+<h3>Sends</h3>
+
+<ul>
+  <% @message.sent_messages.each do |sent_message| %>
+    <li><%= sent_message.record.email %> @ <%= sent_message.created_at %></li>
+  <% end %>
+</ul>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_05_10_155724) do
+ActiveRecord::Schema.define(version: 2018_05_11_122123) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,17 +20,8 @@ ActiveRecord::Schema.define(version: 2018_05_10_155724) do
     t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "plumber_campaign_messages", force: :cascade do |t|
-    t.bigint "message_id"
-    t.bigint "campaign_id"
-    t.integer "delay", default: 0
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["campaign_id"], name: "index_plumber_campaign_messages_on_campaign_id"
-    t.index ["delay"], name: "index_plumber_campaign_messages_on_delay"
-    t.index ["message_id"], name: "index_plumber_campaign_messages_on_message_id"
+    t.string "lead_source"
+    t.datetime "status_updated_at"
   end
 
   create_table "plumber_campaigns", force: :cascade do |t|
@@ -38,38 +29,31 @@ ActiveRecord::Schema.define(version: 2018_05_10_155724) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "record_class"
-  end
-
-  create_table "plumber_entrances", force: :cascade do |t|
-    t.bigint "campaign_id"
-    t.string "record_type"
-    t.bigint "record_id"
-    t.boolean "exited", default: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["campaign_id"], name: "index_plumber_entrances_on_campaign_id"
-    t.index ["record_type", "record_id"], name: "index_plumber_entrances_on_record_type_and_record_id"
+    t.string "delay_column"
   end
 
   create_table "plumber_messages", force: :cascade do |t|
     t.string "subject"
     t.text "body"
+    t.integer "delay", default: 0
+    t.bigint "campaign_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "active", default: true
+    t.index ["campaign_id"], name: "index_plumber_messages_on_campaign_id"
+    t.index ["delay"], name: "index_plumber_messages_on_delay"
   end
 
   create_table "plumber_sent_messages", force: :cascade do |t|
-    t.bigint "entrance_id"
-    t.bigint "campaign_message_id"
+    t.string "record_type"
+    t.bigint "record_id"
+    t.bigint "message_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["campaign_message_id"], name: "index_plumber_sent_messages_on_campaign_message_id"
-    t.index ["entrance_id"], name: "index_plumber_sent_messages_on_entrance_id"
+    t.index ["message_id"], name: "index_plumber_sent_messages_on_message_id"
+    t.index ["record_type", "record_id"], name: "index_plumber_sent_messages_on_record_type_and_record_id"
   end
 
-  add_foreign_key "plumber_campaign_messages", "plumber_campaigns", column: "campaign_id", on_delete: :cascade
-  add_foreign_key "plumber_campaign_messages", "plumber_messages", column: "message_id", on_delete: :cascade
-  add_foreign_key "plumber_entrances", "plumber_campaigns", column: "campaign_id", on_delete: :cascade
-  add_foreign_key "plumber_sent_messages", "plumber_campaign_messages", column: "campaign_message_id", on_delete: :cascade
-  add_foreign_key "plumber_sent_messages", "plumber_entrances", column: "entrance_id", on_delete: :cascade
+  add_foreign_key "plumber_messages", "plumber_campaigns", column: "campaign_id", on_delete: :cascade
+  add_foreign_key "plumber_sent_messages", "plumber_messages", column: "message_id", on_delete: :cascade
 end

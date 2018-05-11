@@ -2,19 +2,28 @@
 
 <h1><%= @campaign.title %></h1>
 
-<h3>Matching Records</h3>
+<h3>Matching <%= @campaign.record_class.pluralize %></h3>
+<pre><%= @campaign.filter %></pre>
 <ul>
   <% @campaign.records.each do |record| %>
     <li><%= record.email %></li>
   <% end %>
 </ul>
 
-<h3>Messages</h3>
+<h3>Campaign Messages</h3>
+<p>Delay based on <%= @campaign.delay_column %></p>
 <ul>
-  <% @campaign.campaign_messages.order(delay: :asc).each do |cm| %>
-    <li><%= cm.message.subject %> - day <%= cm.delay %></li>
+  <% @campaign.messages.order(active: :desc, delay: :asc).each do |message| %>
+    <li>
+      <%= link_to [plumber, message] do %>
+        <%= message.subject %> -
+        day <%= message.delay %> 
+        (<%= message.active? ? 'active' : 'inactive' %>)
+      <% end %>
+    </li>
   <% end %>
 </ul>
+<p><%= link_to "New message", plumber.new_campaign_message_path(@campaign) %></p>
 
 <%= link_to 'Edit', edit_campaign_path(@campaign) %> |
 <%= link_to 'Back', campaigns_path %>
