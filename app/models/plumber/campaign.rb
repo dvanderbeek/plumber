@@ -12,7 +12,7 @@ module Plumber
       when "Adverse Action"
         { status_eq: "declined" }
       when "Lending Tree Welcome"
-        { status_eq: "open", lead_source_eq: "lending_tree", customer_sign_in_count_eq: 0 }
+        { status_eq: "open", lead_source_eq: "lending_tree", customer_sign_in_count_lteq: 3 }
       end
     end
     # END ########################################
@@ -48,7 +48,7 @@ module Plumber
       end
 
       def delay_column_is_date_or_time
-        column = model && model.columns.find{ |c| c.name == delay_column }
+        column = model && model.columns.find { |c| c.name == delay_column }
         if column.nil? || column.type != :datetime
           errors.add(:delay_column, "must be a timestamp")
         end
