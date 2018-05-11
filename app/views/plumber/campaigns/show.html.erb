@@ -1,29 +1,42 @@
-<p id="notice"><%= notice %></p>
-
 <h1><%= @campaign.title %></h1>
+<p><small><%= link_to "Edit", [:edit, @campaign] %></small></p>
 
-<h3>Matching <%= @campaign.record_class.pluralize %></h3>
-<pre><%= @campaign.filter %></pre>
-<ul>
-  <% @campaign.records.each do |record| %>
-    <li><%= record.email %></li>
-  <% end %>
-</ul>
+<div class="card mb-3">
+  <h5 class="card-header">
+    Matching <%= @campaign.record_class.pluralize %>
+  </h5>
+  <div class="card-body">
+    <% @campaign.filter.each do |k, v| %>
+      <div class="btn btn-light">
+        <code><%= k %> <%= v %></code>
+      </div>
+    <% end %>
+  </div>
+  <ul class="list-group list-group-flush">
+    <% @records.each do |record| %>
+      <li class="list-group-item">
+        <%= record.email %>
+      </li>
+    <% end %>
+  </ul>
+</div>
 
-<h3>Campaign Messages</h3>
-<p>Delay based on <%= @campaign.delay_column %></p>
-<ul>
-  <% @campaign.messages.order(active: :desc, delay: :asc).each do |message| %>
-    <li>
-      <%= link_to [plumber, message] do %>
+<%= paginate @records, theme: "twitter-bootstrap-4" %>
+
+<div class="card mb-3">
+  <h5 class="card-header">
+    Campaign Messages
+  </h5>
+  <div class="list-group list-group-flush">
+    <% @campaign.messages.order(active: :desc, delay: :asc).each do |message| %>
+      <%= link_to [plumber, message], class: "list-group-item" do %>
         <%= message.subject %> -
-        day <%= message.delay %> 
+        day <%= message.delay %>
         (<%= message.active? ? 'active' : 'inactive' %>)
       <% end %>
-    </li>
-  <% end %>
-</ul>
-<p><%= link_to "New message", plumber.new_campaign_message_path(@campaign) %></p>
-
-<%= link_to 'Edit', edit_campaign_path(@campaign) %> |
-<%= link_to 'Back', campaigns_path %>
+    <% end %>
+  </div>
+  <div class="card-body">
+    <%= link_to "New message", plumber.new_campaign_message_path(@campaign), class: "btn btn-primary" %>
+  </div>
+</div>

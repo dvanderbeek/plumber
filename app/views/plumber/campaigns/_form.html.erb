@@ -1,32 +1,10 @@
-<%= form_with(model: campaign, local: true) do |form| %>
-  <% if campaign.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(campaign.errors.count, "error") %> prohibited this campaign from being saved:</h2>
+<%= simple_form_for campaign do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
-      <ul>
-      <% campaign.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="field">
-    <%= form.label :title %>
-    <%= form.text_field :title %>
-  </div>
-
-  <div class="field">
-    <%= form.label :record_class %>
-    <%= form.text_field :record_class %>
-  </div>
-
-  <div class="field">
-    <%= form.label :delay_column %>
-    <%= form.text_field :delay_column %>
-  </div>
-
-  <div class="actions">
-    <%= form.submit %>
-  </div>
+  <%= f.input :title %>
+  <%= f.input :record_class %>
+  <%= f.input :delay_column %>
+  <%= f.submit "Save", class: "btn btn-primary" %>
+  <%= link_to "Cancel", (@campaign.persisted? ? @campaign : Plumber::Campaign), class: "btn btn-link" %>
 <% end %>

@@ -6,6 +6,7 @@ module Plumber
 
     # GET /messages/1
     def show
+      @sent_messages = @message.sent_messages.page(params[:page])
     end
 
     # GET /messages/new
@@ -24,7 +25,7 @@ module Plumber
       @message = @campaign.messages.new(message_params)
 
       if @message.save
-        redirect_to @message.campaign, notice: 'Message was successfully created.'
+        redirect_to @message, notice: 'Message was successfully created.'
       else
         render :new
       end
@@ -33,7 +34,7 @@ module Plumber
     # PATCH/PUT /messages/1
     def update
       if @message.update(message_params)
-        redirect_to @message.campaign, notice: 'Message was successfully updated.'
+        redirect_to @message, notice: 'Message was successfully updated.'
       else
         render :edit
       end

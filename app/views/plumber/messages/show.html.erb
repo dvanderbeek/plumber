@@ -1,21 +1,35 @@
-<p id="notice"><%= notice %></p>
+<h1><%= link_to @message.campaign.title, @message.campaign %></h1>
 
-<p><%= link_to @message.campaign.title, @message.campaign %></p>
-<h1><%= @message.subject %></h1>
+<div class="card mb-3">
+  <h5 class="card-header">
+    <%= @message.subject %>
+  </h5>
+  <div class="card-body">
+    <p>
+      <strong>Delay:</strong>
+      <%= @message.delay %> days
+      <% if @message.active? %>
+        <span class="badge badge-pill badge-success ml-2">Active</span>
+      <% else %>
+        <span class="badge badge-pill badge-danger ml-2">Inactive</span>
+      <% end %>
+    </p>
+    <hr>
+    <%= Kramdown::Document.new(@message.body).to_html.html_safe %>
+    <hr>
+    <%= link_to "Edit message", [plumber, :edit, @message], class: "btn btn-primary" %>
+  </div>
+</div>
 
-<p>
-  <strong>Delay:</strong>
-  <%= @message.delay %>
-</p>
+<div class="card">
+  <h5 class="card-header">
+    Sends
+  </h5>
+  <ul class="list-group list-group-flush">
+    <% @sent_messages.each do |sent_message| %>
+      <li class="list-group-item"><%= sent_message.record.email %> @ <%= sent_message.created_at %></li>
+    <% end %>
+  </ul>
+</div>
 
-<%= simple_format @message.body %>
-
-<%= link_to "Edit message", [plumber, :edit, @message] %>
-
-<h3>Sends</h3>
-
-<ul>
-  <% @message.sent_messages.each do |sent_message| %>
-    <li><%= sent_message.record.email %> @ <%= sent_message.created_at %></li>
-  <% end %>
-</ul>
+<%= paginate @sent_messages, theme: "twitter-bootstrap-4" %>

@@ -11,6 +11,7 @@ module Plumber
 
     # GET /campaigns/1
     def show
+      @records = @campaign.records.page(params[:page])
     end
 
     # GET /campaigns/new

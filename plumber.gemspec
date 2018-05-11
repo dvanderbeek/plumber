@@ -19,6 +19,12 @@ Gem::Specification.new do |s|
   s.add_dependency "ransack", "~> 1.8"
   s.add_dependency "maildown", "~> 3.0"
   s.add_dependency "liquid", "~> 4.0"
+  s.add_dependency 'simple_form', '~> 4.0'
+  s.add_dependency 'jquery-rails', '~> 4.3'
+  s.add_dependency 'bootstrap', '~> 4.1'
+  s.add_dependency 'kaminari', '~> 1.1'
+  s.add_dependency 'bootstrap4-kaminari-views', '~> 1.0'
+  s.add_dependency 'kramdown', '~> 1.16'
 
   s.add_development_dependency "pg"
 end

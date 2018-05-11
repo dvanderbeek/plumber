@@ -1,16 +1,22 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Plumber</title>
-  <%= csrf_meta_tags %>
-  <%= csp_meta_tag %>
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Apply</title>
+    <%= tag(:meta, charset: 'utf-8') %>
+    <%= tag(:meta, name: 'viewport', content: 'width=device-width, initial-scale=1, shrink-to-fit=no') %>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
 
-  <%= stylesheet_link_tag    "plumber/application", media: "all" %>
-  <%= javascript_include_tag "plumber/application" %>
-</head>
-<body>
+    <%= stylesheet_link_tag    'plumber/application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'plumber/application', 'data-turbolinks-track': 'reload' %>
+  </head>
 
-<%= yield %>
+  <body>
+    <%= render "navigation" %>
+    <%= render "flashes" %>
 
-</body>
+    <div class="container-fluid">
+      <%= yield %>
+    </div>
+  </body>
 </html>
