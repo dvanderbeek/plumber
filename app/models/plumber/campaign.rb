@@ -30,7 +30,7 @@ module Plumber
     def send_messages(date = Date.current)
       messages.where(active: true).each do |message|
         records.where("date(#{record_table}.#{delay_column}) = ?", (date - message.delay.days).to_date).each do |record|
-          SentMessage.find_or_create_by(record: record, message: message)
+          SentMessage.find_or_create_by(record: record, message_id: message.id)
         end
       end
     end

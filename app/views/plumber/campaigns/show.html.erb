@@ -1,5 +1,4 @@
 <h1><%= @campaign.title %></h1>
-<p><small><%= link_to "Edit", [:edit, @campaign] %></small></p>
 
 <div class="card mb-3">
   <h5 class="card-header">
@@ -28,15 +27,12 @@
     Campaign Messages
   </h5>
   <div class="list-group list-group-flush">
-    <% @campaign.messages.order(active: :desc, delay: :asc).each do |message| %>
-      <%= link_to [plumber, message], class: "list-group-item" do %>
+    <% @campaign.messages.each do |message| %>
+      <%= link_to message_path(message.id), class: "list-group-item" do %>
         <%= message.subject %> -
         day <%= message.delay %>
         (<%= message.active? ? 'active' : 'inactive' %>)
       <% end %>
     <% end %>
-  </div>
-  <div class="card-body">
-    <%= link_to "New message", plumber.new_campaign_message_path(@campaign), class: "btn btn-primary" %>
   </div>
 </div>

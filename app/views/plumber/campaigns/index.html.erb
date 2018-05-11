@@ -10,12 +10,8 @@
   <tbody>
     <% @campaigns.each do |campaign| %>
       <tr>
-        <td><%= link_to campaign.title, campaign %></td>
+        <td><%= link_to campaign.title, campaign_path(campaign.id) %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
-
-<br>
-
-<%= link_to 'New Campaign', new_campaign_path, class: "btn btn-primary" %>

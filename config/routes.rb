@@ -1,5 +1,4 @@
 Plumber::Engine.routes.draw do
-  resources :campaigns do
-    resources :messages, shallow: true, except: :index
-  end
+  resources :campaigns, only: [:index, :show]
+  resources :messages, only: :show
 end
