@@ -1,6 +1,6 @@
 module Plumber
   class ApplicationMailer < ActionMailer::Base
-    default from: 'from@example.com'
+    default from: Plumber.email_from
     layout 'mailer'
   end
 end
