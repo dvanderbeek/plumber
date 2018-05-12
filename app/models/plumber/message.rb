@@ -23,7 +23,15 @@ module Plumber
     end
 
     def body
-      File.read(Rails.root.join("app", "views", "plumber", "messages", template))
+      @body ||= File.read(Rails.root.join("app", "views", "plumber", "messages", template))
+    end
+
+    def parsed_template
+      @parsed_template ||= Liquid::Template.parse(body)
+    end
+
+    def html(record)
+      parsed_template.render(record.to_h.deep_stringify_keys)
     end
   end
 end

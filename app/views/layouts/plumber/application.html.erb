@@ -12,7 +12,7 @@
   </head>
 
   <body>
-    <%= render "navigation" %>
+    <%= render Plumber.nav_partial || "navigation" %>
     <%= render "flashes" %>
 
     <div class="container-fluid">

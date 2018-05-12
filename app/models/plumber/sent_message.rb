@@ -7,10 +7,11 @@ module Plumber
     private
 
       def deliver_message
+        return unless record.email.present?
         NotificationMailer.send_message(
           record: record,
           message_id: message_id
-        ).deliver_later
+        ).deliver_now
       end
   end
 end

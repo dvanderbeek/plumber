@@ -16,6 +16,8 @@ module Plumber
   mattr_accessor :brand_link
   self.brand_link = "/admin"
 
+  mattr_accessor :nav_partial
+
   def self.configure
     yield self
   end

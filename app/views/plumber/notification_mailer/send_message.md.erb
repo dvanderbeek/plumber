@@ -1,1 +1,1 @@
-<%= Liquid::Template.parse(@message.body).render(@record.to_h.deep_stringify_keys) %>
+<%= @message.html(@record) %>
