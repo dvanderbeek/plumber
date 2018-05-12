@@ -8,14 +8,18 @@ module Plumber
       CampaignDefinition.all
     end
 
-    def self.find(id)
-      all.find { |c| c.id == id.to_i }
+    def self.find(slug)
+      all.find { |e| e.slug == slug }
     end
 
     def self.send!(date = Date.current)
       all.each do |campaign|
         campaign.send_messages(date)
       end
+    end
+
+    def slug
+      title.parameterize
     end
 
     def send_messages(date = Date.current)
@@ -28,6 +32,11 @@ module Plumber
 
     def records
       model.ransack(filter).result
+    end
+
+    def messages=(array)
+      array.map { |e| e.campaign = self }
+      @messages = array
     end
 
     private

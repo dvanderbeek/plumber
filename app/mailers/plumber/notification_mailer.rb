@@ -3,7 +3,7 @@ module Plumber
     def send_message(record:, message_id:)
       @record = record
       @message = Message.find(message_id)
-      mail(to: record.email, subject: message.subject)
+      mail(to: record.email, subject: @message.subject)
     end
   end
 end

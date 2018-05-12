@@ -1,4 +1,4 @@
-<h1><%= link_to @message.campaign.title, @message.campaign %></h1>
+<h1><%= link_to @message.campaign.title, campaign_path(@message.campaign.slug) %></h1>
 
 <div class="card mb-3">
   <h5 class="card-header">

@@ -2,14 +2,16 @@ module Plumber
   class Message
     include ActiveModel::Model
 
-    attr_accessor :id, :campaign_id, :subject, :template, :delay, :active
+    attr_accessor :id, :campaign, :subject, :template, :delay, :active
+
+    alias_method :active?, :active
 
     def self.all
       Campaign.all.map(&:messages).flatten
     end
 
     def self.find(id)
-      all.find { |c| c.id == id.to_i }
+      all.find { |e| e.id == id.to_i }
     end
 
     def self.where(conditions = {})
@@ -18,14 +20,6 @@ module Plumber
           message.send(k) == v
         end
       end
-    end
-
-    def active?
-      active
-    end
-
-    def campaign
-      Campaign.find(campaign_id)
     end
 
     def body

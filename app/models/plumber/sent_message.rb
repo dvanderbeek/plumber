@@ -1,13 +1,8 @@
 module Plumber
   class SentMessage < ApplicationRecord
     belongs_to :record, polymorphic: true
-    has_one :campaign, through: :message
 
-    after_create :deliver_message
-
-    def message
-      Message.find(message_id)
-    end
+    before_create :deliver_message, on: :create
 
     private
 

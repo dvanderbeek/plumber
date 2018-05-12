@@ -1,5 +1,5 @@
 module Plumber
-  class ApplicationMailer < ActionMailer::Base
+  class ApplicationMailer < ::ApplicationMailer
     default from: Plumber.email_from
     layout 'mailer'
   end
