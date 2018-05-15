@@ -5,6 +5,8 @@
   <div class="col-sm-9">
     <h1><%= @campaign.title %></h1>
 
+    <p>Send from <%= twelve_hour @campaign.start_sending %> to <%= twelve_hour @campaign.stop_sending %></p>
+
     <div class="card mb-3">
       <h5 class="card-header">
         Matching <%= @campaign.record_class.pluralize %>

@@ -2,7 +2,7 @@ module Plumber
   class Campaign
     include ActiveModel::Model
 
-    attr_accessor :id, :title, :record_class, :delay_column, :filter, :messages
+    attr_accessor :id, :title, :record_class, :delay_column, :filter, :messages, :start_sending, :stop_sending
 
     def self.all
       CampaignDefinition.all
@@ -12,22 +12,25 @@ module Plumber
       all.find { |e| e.slug == slug }
     end
 
-    def self.send!(date = Date.current)
+    def self.send!(as_of = Time.current)
       all.each do |campaign|
-        campaign.send_messages(date)
+        if as_of.hour.between?(campaign.start_sending, campaign.stop_sending)
+          campaign.send_messages(as_of)
+        end
       end
     end
 
-    def slug
-      title.parameterize
-    end
-
-    def send_messages(date = Date.current)
+    def send_messages(as_of = Time.current)
       messages.select { |m| m.active }.each do |message|
-        records.where("date(#{record_table}.#{delay_column}) = ?", (date - message.delay.days).to_date).each do |record|
+        records_to_send(as_of, message).each do |record|
           SentMessage.find_or_create_by(record: record, message_id: message.id)
         end
       end
+    end
+
+    def records_to_send(as_of, message)
+      target_date = as_of.to_date - message.delay.days
+      records.where("date(#{record_table}.#{delay_column}) BETWEEN ? AND ?", target_date.yesterday, target_date)
     end
 
     def upcoming_records
@@ -45,6 +48,18 @@ module Plumber
     def messages=(array)
       array.map { |e| e.campaign = self }
       @messages = array
+    end
+
+    def slug
+      title.parameterize
+    end
+
+    def start_sending
+      @start_sending ||= 0
+    end
+
+    def stop_sending
+      @stop_sending ||= 23
     end
 
     private

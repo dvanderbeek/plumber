@@ -1,6 +1,9 @@
 # Plumber
 Short description and motivation.
 
+## TODO
+Create limit setting for when to send messages
+
 ## Usage
 How to use my plugin.
 
