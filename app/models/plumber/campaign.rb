@@ -21,20 +21,23 @@ module Plumber
     end
 
     def send_messages(as_of = Time.current)
-      messages.select { |m| m.active }.each do |message|
+      active_messages.each do |message|
         records_to_send(as_of, message).each do |record|
-          SentMessage.find_or_create_by(record: record, message_id: message.id)
+          # Only send if the record has not already received an email in the campaign today
+          if SentMessage.where("created_at::date = ?", as_of.to_date).where(record: record, message_id: active_messages.map(&:id)).none?
+            SentMessage.find_or_create_by(record: record, message_id: message.id)
+          end
         end
       end
     end
 
     def records_to_send(as_of, message)
       target_date = as_of.to_date - message.delay.days
-      records.where("date(#{record_table}.#{delay_column}) BETWEEN ? AND ?", target_date.yesterday, target_date)
+      records.where("#{record_table}.#{delay_column} BETWEEN ? AND ?", target_date.yesterday.beginning_of_day, target_date.end_of_day)
     end
 
     def upcoming_records
-      records.where("date(#{record_table}.#{delay_column}) BETWEEN ? AND ?", Date.current - delays.max.days, Date.current)
+      records.where("#{record_table}.#{delay_column} BETWEEN ? AND ?", (Date.current - delays.max.days).beginning_of_day, Date.current.end_of_day)
     end
 
     def records
@@ -48,6 +51,10 @@ module Plumber
     def messages=(array)
       array.map { |e| e.campaign = self }
       @messages = array
+    end
+
+    def active_messages
+      messages.select { |m| m.active }
     end
 
     def slug
