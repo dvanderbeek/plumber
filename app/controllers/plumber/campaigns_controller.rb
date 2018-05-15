@@ -5,7 +5,7 @@ module Plumber
     # GET /campaigns/1
     def show
       @campaign = Campaign.find(params[:id])
-      @records = @campaign.records.page(params[:page])
+      @records = @campaign.upcoming_records.page(params[:page])
     end
   end
 end

@@ -30,8 +30,16 @@ module Plumber
       end
     end
 
+    def upcoming_records
+      records.where("date(#{record_table}.#{delay_column}) BETWEEN ? AND ?", Date.current - delays.max.days, Date.current)
+    end
+
     def records
       model.ransack(filter).result
+    end
+
+    def delays
+      messages.map(&:delay)
     end
 
     def messages=(array)
