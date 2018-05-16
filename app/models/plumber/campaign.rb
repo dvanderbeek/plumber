@@ -14,30 +14,32 @@ module Plumber
 
     def self.send!(as_of = Time.current)
       all.each do |campaign|
-        if as_of.hour.between?(campaign.start_sending, campaign.stop_sending)
-          campaign.send_messages(as_of)
-        end
+        campaign.send_messages(as_of)
       end
     end
 
     def send_messages(as_of = Time.current)
+      start_time = as_of.change(hour: start_sending, min: 0, sec: 0)
+      stop_time  = as_of.change(hour: stop_sending, min: 0, sec: 0)
+      return unless as_of >= start_time && as_of <= stop_time
       active_messages.each do |message|
         records_to_send(as_of, message).each do |record|
-          # Only send if the record has not already received an email in the campaign today
-          if SentMessage.where("created_at::date = ?", as_of.to_date).where(record: record, message_id: active_messages.map(&:id)).none?
-            SentMessage.find_or_create_by(record: record, message_id: message.id)
-          end
+          SentMessage.find_or_create_by(record: record, message_id: message.id)
         end
       end
     end
 
     def records_to_send(as_of, message)
       target_date = as_of.to_date - message.delay.days
-      records.where("#{record_table}.#{delay_column} BETWEEN ? AND ?", target_date.yesterday.beginning_of_day, target_date.end_of_day)
+      start = target_date.yesterday.beginning_of_day.change(hour: stop_sending - 1, min: 59, sec: 59)
+      records.where("#{record_table}.#{delay_column} > ?", start)
+             .where("#{record_table}.#{delay_column} <= ?", start.tomorrow)
     end
 
     def upcoming_records
-      records.where("#{record_table}.#{delay_column} BETWEEN ? AND ?", (Date.current - delays.max.days).yesterday.beginning_of_day, Date.current.end_of_day)
+      target_date = Date.current.to_date - delays.max.days
+      start = target_date.yesterday.beginning_of_day.change(hour: stop_sending - 1, min: 59, sec: 59)
+      records.where("#{record_table}.#{delay_column} > ?", start)
     end
 
     def records
