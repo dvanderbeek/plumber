@@ -31,15 +31,15 @@ module Plumber
 
     def records_to_send(as_of, message)
       target_date = as_of.to_date - message.delay.days
-      start = target_date.yesterday.beginning_of_day.change(hour: stop_sending - 1, min: 59, sec: 59)
-      stop  = target_date.beginning_of_day.change(hour: as_of.hour, min: as_of.min, sec: as_of.sec)
+      start = target_date.yesterday.noon.change(hour: stop_sending - 1, min: 59, sec: 59)
+      stop  = target_date.noon.change(hour: as_of.hour, min: as_of.min, sec: as_of.sec)
       records.where("#{record_table}.#{delay_column} > ?", start)
              .where("#{record_table}.#{delay_column} <= ?", stop)
     end
 
     def upcoming_records
       target_date = Date.current.to_date - delays.max.days
-      start = target_date.yesterday.beginning_of_day.change(hour: stop_sending - 1, min: 59, sec: 59)
+      start = target_date.yesterday.noon.change(hour: stop_sending - 1, min: 59, sec: 59)
       records.where("#{record_table}.#{delay_column} > ?", start)
     end
 
