@@ -37,7 +37,7 @@ module Plumber
     end
 
     def upcoming_records
-      records.where("#{record_table}.#{delay_column} BETWEEN ? AND ?", (Date.current - delays.max.days).beginning_of_day, Date.current.end_of_day)
+      records.where("#{record_table}.#{delay_column} BETWEEN ? AND ?", (Date.current - delays.max.days).yesterday.beginning_of_day, Date.current.end_of_day)
     end
 
     def records
