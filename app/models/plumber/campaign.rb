@@ -20,7 +20,7 @@ module Plumber
 
     def send_messages(as_of = Time.current)
       start_time = as_of.change(hour: start_sending, min: 0, sec: 0)
-      stop_time  = as_of.change(hour: stop_sending, min: 0, sec: 0)
+      stop_time  = as_of.change(hour: stop_sending - 1, min: 59, sec: 59)
       return unless as_of >= start_time && as_of <= stop_time
       active_messages.each do |message|
         records_to_send(as_of, message).each do |record|
