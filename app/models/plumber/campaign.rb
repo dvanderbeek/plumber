@@ -20,7 +20,7 @@ module Plumber
 
     def send_messages(as_of = Time.current)
       start_time = as_of.change(hour: start_sending, min: 0, sec: 0)
-      stop_time  = as_of.change(hour: stop_sending - 1, min: 59, sec: 59)
+      stop_time  = as_of.change(hour: stop_sending, min: 0, sec: 0)
       return unless as_of >= start_time && as_of <= stop_time
       active_messages.each do |message|
         records_to_send(as_of, message).each do |record|
@@ -31,7 +31,7 @@ module Plumber
 
     def records_to_send(as_of, message)
       target_date = as_of.to_date - message.delay.days
-      # Start of hour so that we make sure to catch records close to cutoff
+      # Look back 1 hour to make sure we catch records close to cutoff
       start = target_date.yesterday.noon.change(hour: stop_sending - 1, min: 0, sec: 0)
       stop  = target_date.noon.change(hour: as_of.hour, min: as_of.min, sec: as_of.sec)
       records.where("#{record_table}.#{delay_column} > ?", start)
@@ -40,7 +40,7 @@ module Plumber
 
     def upcoming_records
       target_date = Date.current.to_date - delays.max.days
-      start = target_date.yesterday.noon.change(hour: stop_sending - 1, min: 59, sec: 59)
+      start = target_date.yesterday.noon.change(hour: stop_sending, min: 0, sec: 0)
       records.where("#{record_table}.#{delay_column} > ?", start)
     end
 
