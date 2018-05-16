@@ -2,6 +2,8 @@ module Plumber
   class Campaign
     include ActiveModel::Model
 
+    # TODO: Handle no start/stope sending times
+
     attr_accessor :id, :title, :record_class, :delay_column, :filter, :messages, :start_sending, :stop_sending
 
     def self.all
@@ -33,7 +35,7 @@ module Plumber
       target_date = as_of.to_date - message.delay.days
       start = target_date.yesterday.beginning_of_day.change(hour: stop_sending - 1, min: 59, sec: 59)
       records.where("#{record_table}.#{delay_column} > ?", start)
-             .where("#{record_table}.#{delay_column} <= ?", start.tomorrow)
+             .where("#{record_table}.#{delay_column} <= ?", as_of)
     end
 
     def upcoming_records
