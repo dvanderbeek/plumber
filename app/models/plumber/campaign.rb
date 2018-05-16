@@ -2,8 +2,6 @@ module Plumber
   class Campaign
     include ActiveModel::Model
 
-    # TODO: Handle no start/stope sending times
-
     attr_accessor :id, :title, :record_class, :delay_column, :filter, :messages, :start_sending, :stop_sending
 
     def self.all
@@ -70,7 +68,7 @@ module Plumber
     end
 
     def stop_sending
-      @stop_sending ||= 23
+      @stop_sending ||= 24
     end
 
     private
