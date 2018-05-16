@@ -31,7 +31,8 @@ module Plumber
 
     def records_to_send(as_of, message)
       target_date = as_of.to_date - message.delay.days
-      start = target_date.yesterday.noon.change(hour: stop_sending - 1, min: 59, sec: 59)
+      # Start of hour so that we make sure to catch records close to cutoff
+      start = target_date.yesterday.noon.change(hour: stop_sending - 1, min: 0, sec: 0)
       stop  = target_date.noon.change(hour: as_of.hour, min: as_of.min, sec: as_of.sec)
       records.where("#{record_table}.#{delay_column} > ?", start)
              .where("#{record_table}.#{delay_column} <= ?", stop)
