@@ -22,12 +22,8 @@ module Plumber
       end
     end
 
-    def body
-      @body ||= File.read(Rails.root.join("app", "views", "plumber", "messages", template))
-    end
-
     def parsed_template
-      @parsed_template ||= Liquid::Template.parse(body)
+      @parsed_template ||= Liquid::Template.parse(template)
     end
 
     def html(record)

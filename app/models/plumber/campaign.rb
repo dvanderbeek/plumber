@@ -39,6 +39,7 @@ module Plumber
     end
 
     def upcoming_records
+      return records unless messages.any?
       target_date = Date.current.to_date - delays.max.days
       start = target_date.yesterday.noon.change(hour: stop_sending, min: 0, sec: 0)
       records.where("#{record_table}.#{delay_column} > ?", start)
@@ -53,8 +54,7 @@ module Plumber
     end
 
     def messages=(array)
-      array.map { |e| e.campaign = self }
-      @messages = array
+      @messages = array.map { |e| m = Message.new(e); m.campaign = self; m }
     end
 
     def active_messages
