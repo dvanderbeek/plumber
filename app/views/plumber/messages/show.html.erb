@@ -3,7 +3,7 @@
     <%= render "plumber/campaigns/subnav" %>
   </div>
   <div class="col-sm-9">
-    <h1><%= link_to @message.campaign.title, campaign_path(@message.campaign.slug) %></h1>
+    <h1><%= link_to @campaign.title, campaign_path(@campaign.id) %></h1>
 
     <div class="card mb-3">
       <h5 class="card-header">
@@ -12,7 +12,7 @@
       <div class="card-body">
         <p>
           <strong>Delay:</strong>
-          <%= @message.delay %> days based on <code><%= @message.campaign.delay_column %></code>
+          <%= @message.delay %> days based on <code><%= @campaign.delay_column %></code>
           <% if @message.active? %>
             <span class="badge badge-pill badge-success float-right">Active</span>
           <% else %>
