@@ -87,6 +87,8 @@ module Plumber
           title: "Welcome",
           record_class: "User",
           delay_column: "created_at",
+          start_sending: 9, # 9am
+          stop_sending: 17, # 5pm
           filter: {
             status_eq: "open",
             sign_in_count_lteq: 3
