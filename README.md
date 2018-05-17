@@ -1,5 +1,5 @@
 # Plumber
-Short description and motivation.
+Plumber lets you define drip email campaigns and provides a dashboard to view the campaings, messages, and sent emails.
 
 ## Usage
 
