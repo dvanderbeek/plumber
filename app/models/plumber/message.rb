@@ -2,12 +2,22 @@ module Plumber
   class Message
     include ActiveModel::Model
 
-    attr_accessor :id, :campaign_id, :campaign, :subject, :template, :delay, :active
+    attr_accessor :id, :campaign, :subject, :template, :delay, :active
 
     alias_method :active?, :active
 
     def self.find(id)
       CampaignDefinition.get_message(id)
+    end
+
+    def initialize(attrs = {})
+      attrs = attrs.with_indifferent_access
+      self.id = attrs[:id]
+      self.subject = attrs[:subject]
+      self.template = attrs[:template]
+      self.delay = attrs[:delay]
+      self.active = attrs[:active]
+      self.campaign = Campaign.new(attrs[:campaign]) if attrs[:campaign]
     end
 
     def parsed_template

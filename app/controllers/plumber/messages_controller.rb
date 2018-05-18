@@ -5,7 +5,7 @@ module Plumber
     # GET /messages/1
     def show
       @message = Message.find(params[:id])
-      @campaign = Campaign.find(@message.campaign_id)
+      @campaign = @message.campaign
       @sent_messages = SentMessage.where(message_id: @message.id).page(params[:page])
     end
   end
