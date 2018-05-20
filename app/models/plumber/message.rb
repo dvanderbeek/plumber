@@ -7,7 +7,7 @@ module Plumber
     alias_method :active?, :active
 
     def self.find(id)
-      CampaignDefinition.get_message(id)
+      Repo.get_message(id)
     end
 
     def initialize(attrs = {})

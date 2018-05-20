@@ -3,11 +3,11 @@ Plumber lets you define drip email campaigns and provides a dashboard to view th
 
 ## Usage
 
-* Provide a `CampaignDefinition` class that tells the gem about your campaigns and messages. In this example, we are pulling from an CMS with a JSON API, but you could also just define everything as an array of Campaign objects with nested Message objects in this file. If you do that, your `.get_message` and `.get_campaign` methods would just have to find the correct instance using Ruby to search through all the Campaigns.
+* Provide a `Repo` class that tells the gem about your campaigns and messages. In this example, we are pulling from an CMS with a JSON API, but you could also just define everything as an array of Campaign objects with nested Message objects in this file. If you do that, your `.get_message` and `.get_campaign` methods would just have to find the correct instance using Ruby to search through all the Campaigns.
 
 ```ruby
 module Plumber
-  class CampaignDefinition
+  class Repo
     def self.list_campaigns
       response = HTTParty.get(
         "#{Segment::Scopes.base_uri}/campaigns",
@@ -72,7 +72,7 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ```ruby
 module Plumber
-  class CampaignDefinition
+  class Repo
     def self.get_message(id)
       list_campaigns.map(&:messages).flatten.find { |e| e.id == id.to_i }
     end

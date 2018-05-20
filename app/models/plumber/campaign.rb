@@ -5,11 +5,11 @@ module Plumber
     attr_accessor :id, :title, :record_class, :delay_column, :filter, :messages, :start_sending, :stop_sending
 
     def self.all
-      CampaignDefinition.list_campaigns
+      Repo.list_campaigns
     end
 
     def self.find(id)
-      CampaignDefinition.get_campaign(id)
+      Repo.get_campaign(id)
     end
 
     def self.send!(as_of = Time.current)
