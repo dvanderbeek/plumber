@@ -30,7 +30,7 @@ module Plumber
     end
 
     def from
-      super || Plumber.email_from
+      @from ||= Plumber.email_from
     end
   end
 end

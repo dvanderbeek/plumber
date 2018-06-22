@@ -19,6 +19,9 @@
             <span class="badge badge-pill badge-danger float-right">Inactive</span>
           <% end %>
         </p>
+        <p>
+          <strong>From:</strong> <%= @message.from %>
+        </p>
         <hr>
         <%= Kramdown::Document.new(@message.template).to_html.html_safe %>
       </div>
