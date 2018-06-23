@@ -8,6 +8,7 @@ module Plumber
 
       def deliver_message
         return unless record.email.present?
+        self.email = record.email
         NotificationMailer.send_message(
           record: record,
           message_id: message_id
