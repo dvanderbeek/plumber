@@ -12,7 +12,7 @@ module Plumber
         NotificationMailer.send_message(
           record: record,
           message_id: message_id
-        ).deliver_now
+        ).deliver_later
       end
   end
 end
